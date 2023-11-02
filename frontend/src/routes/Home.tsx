@@ -1,5 +1,5 @@
 
-import Cookie from "js-cookie";
+
 import { FaStar, FaRegHeart } from "react-icons/fa";
 import {
   Box,
@@ -16,42 +16,16 @@ import {
 
 
 import ClassSkeleton from "../components/ClassSkeleton";
-import { start } from "repl";
 import Banner from "../components/Banner"
 import { useQuery } from "@tanstack/react-query";
 
 
 
-import { useEffect, useState } from "react";
-
 import AgtmClass from "../components/AgtmClass";
+import { getClassList } from "../api";
+import { IClass } from "../types";
 
 
-interface IPhoto {
-  pk: string;
-  file: string;
-  description: string;
-}
-
-interface IOwner {
-  img: string;
-  username: string;
-  email: string;
-}
-
-interface IClass {
-  pk: number;
-  title: string;
-  subtitle:string;
-  place:string;
-  address: string;
-  price: number;
-  start:string;
-  end: string;
-  owner:IOwner[];
-  is_liked:boolean;
-  photos: IPhoto[];
-}
 
 // interface IPhoto {
 //   pk: string;
@@ -72,24 +46,28 @@ interface IClass {
 
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [classList, setClassList] = useState<IClass[]>([]);
-  const fetchClassList = async () => {
-    const response = await fetch("/api/v1/class/@devcation",
-    {headers: {
-      "X-CSRFToken": Cookie.get("csrftoken") || "",
-    },});
-    const json = await response.json();
-    console.log(json)
-    setClassList(json);
-    setIsLoading(false);
-  };
-  useEffect(() => {
-    fetchClassList();
-  }, []);
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [classList, setClassList] = useState<IClass[]>([]);
+  // const fetchClassList = async () => {
+  //   const response = await fetch("/api/v1/class/@devcation",
+  //   {headers: {
+  //     "X-CSRFToken": Cookie.get("csrftoken") || "",
+  //   },});
+  //   const json = await response.json();
+  //   console.log(json)
+  //   setClassList(json);
+  //   setIsLoading(false);
+  // };
+  // useEffect(() => {
+  //   fetchClassList();
+  // }, []);
+
+
+
+  const { isLoading, data } = useQuery<IClass[]>({ queryKey: ['class'], queryFn: getClassList })
 
   return (
-    <Stack>
+    <Stack  paddingBottom={100}>
       <Banner/>
 
       <VStack  
@@ -142,11 +120,12 @@ export default function Home() {
         </>
       ) : null}
 
-    {classList.map((agtmClass) => (
+    {data?.map((agtmclass) => (
         <AgtmClass
-          imageUrl={agtmClass.photos[0].file}
-          title={agtmClass.title}
-          address={agtmClass.address}
+          pk={agtmclass.pk }
+          imageUrl={agtmclass.photos[0].file}
+          title={agtmclass.title}
+          address={agtmclass.address}
 
         />
       ))}
