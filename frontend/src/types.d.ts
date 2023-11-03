@@ -43,3 +43,18 @@ export interface IClassDetail {
     description:string;
     headcount:number;
 }
+
+//
+export interface IReview {
+    comment: string;
+    rating: number;
+    user: IOwner;
+}
+
+export  interface IUser {
+    last_login: string
+    date_joined: string
+    img: string;
+    username: string;
+    email: string;
+}

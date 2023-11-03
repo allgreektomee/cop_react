@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { getClassDetail } from "../api";
-import { IClassDetail } from "../types";
-import SplitWithImage  from "../components/SplitWithImage"
+import { getClassDetail , getClassReviews} from "../api";
+import { IClassDetail, IReview } from "../types";
+import SplitWithImage  from "../components/SplitWithImage";
+import { FaStar } from "react-icons/fa";
 
 import {
   Box,
@@ -31,7 +32,13 @@ import {
 
 export default function ClassDetaill() {
   const { classPk   } = useParams();
-  const { isLoading, data } = useQuery<IClassDetail>({ queryKey: [classPk], queryFn: getClassDetail });
+  // const { isLoading, data } = useQuery<IClassDetail>({ queryKey: ['classPk'], queryFn: getClassDetail });
+
+  const { isLoading, data } = useQuery([`class`, classPk], getClassDetail);
+  const { data: reviewsData, isLoading: isReviewsLoading } = useQuery<
+    IReview[]
+  >([`class`, classPk, `reviews`], getClassReviews);
+
   return (
     <Box
       mt={10}
@@ -83,11 +90,48 @@ export default function ClassDetaill() {
         </Skeleton>
       </VStack>
 
+      </Container>
+      
 
       
-    
-      </Container>
- 
+
+      <Box mt={10}>
+        <Heading fontSize={"2xl"}>
+          <HStack>
+            <FaStar /> <Text>5.0</Text>
+            <Text>∙</Text>
+            <Text>
+              {reviewsData?.length} review{reviewsData?.length === 1 ? "" : "s"}
+            </Text>
+          </HStack>
+        </Heading>
+      </Box>
+
+      <Container mt={16} maxW="container.lg" marginX="none">
+        
+          <Grid gap={10} templateColumns={"1fr 1fr"}>
+            {reviewsData?.map((review, index) => (
+              <VStack alignItems={"flex-start"} key={index}>
+                <HStack>
+                  <Avatar
+                    name={review.user.username}
+                    src={review.user.img}
+                    size="md"
+                  />
+                  <VStack spacing={0} alignItems={"flex-start"}>
+                    <Heading fontSize={"md"}>{review.user.username}</Heading>
+                    <HStack spacing={1}>
+                      <FaStar size="12px" />
+                      <Text>{review.rating}</Text>
+                    </HStack>
+                  </VStack>
+                </HStack>
+                <Text>{review.comment}</Text>
+              </VStack>
+            ))}
+          </Grid>
+        </Container>
+
     </Box>
    
   );

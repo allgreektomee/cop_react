@@ -4,6 +4,7 @@ import Home from "./routes/Home";
 import Users from "./routes/Users";
 import NotFound from "./routes/NotFound";
 import ClassDetaill from "./routes/ClassDetaill";
+import KakaoConfirm from "./routes/KakaoConfirm";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,15 @@ const router = createBrowserRouter([
         path: "class/:classPk",
         element: <ClassDetaill />,
       },
+      {
+        path: "social",
+        children: [
+          {
+            path: "kakao",
+            element: <KakaoConfirm />,
+          }
+        ]
+      }
     ],
   },
 ]);
