@@ -89,7 +89,7 @@ export default function Header() {
             <Box color={logoColor}>
                 <Link to={"/"}>
                 {/* <FaWineBottle size={"48"} /> */}
-                <Text fontSize={30}> ㅅㅊㅇㅎ</Text>
+                <Text fontSize={30}> 우리오더 </Text>
                 </Link>
             </Box>
 
